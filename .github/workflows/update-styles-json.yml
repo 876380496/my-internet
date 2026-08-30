@@ -1,9 +1,5 @@
 name: Format and Update styles.json
 
-permissions:
-  contents: write
-
-
 on:
   push:
     paths:
@@ -17,9 +13,13 @@ on:
   workflow_dispatch:
 
 
+
+
 jobs:
   format-and-update:
     runs-on: ubuntu-latest
+
+
 
 
     steps:
@@ -30,14 +30,20 @@ jobs:
           ref: ${{ github.head_ref }}
 
 
+
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
 
+
+
       - name: Install dependencies (initial)
         run: npm install
+
+
 
 
       - name: Run Prettier
@@ -48,16 +54,24 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
 
+
+
       - name: Reinstall dependencies after Prettier
         run: npm install
+
+
 
 
       - name: Run script to update styles.json
         run: node update-styles-json.mjs
 
 
+
+
       - name: Validate styles.json
         run: jq empty styles.json
+
+
 
 
       - name: Commit and push styles.json if changed
@@ -67,14 +81,4 @@ jobs:
           git add styles.json
 
 
-          if git diff --cached --quiet; then
-            echo "No changes to styles.json."
-            exit 0
-          fi
-
-
-          git commit -m 'Update styles.json'
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
